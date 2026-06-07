@@ -37,6 +37,15 @@ public class TemperatureConverter {
 
             } else {
 
+                // Sometimes the input has the unit stuck on the end like "100c"
+                // If the last character is a letter, we split it off
+                String embeddedUnit = "";
+                char lastChar = input.charAt(input.length() - 1);
+                if (Character.isLetter(lastChar)) {
+                    embeddedUnit = String.valueOf(lastChar).toUpperCase();
+                    input = input.substring(0, input.length() - 1);
+                }
+
                 // Check if the input is actually a number
                 boolean isNumber = true;
 
@@ -73,9 +82,14 @@ public class TemperatureConverter {
                     // Convert the string to an actual number
                     double temperature = Double.parseDouble(input);
 
-                    // Ask for the unit
-                    System.out.print("Enter unit (C or F): ");
-                    String unit = scanner.nextLine().toUpperCase();
+                    // If the unit was already attached to the number, use it
+                    // Otherwise ask the user for it
+                    String unit = embeddedUnit;
+
+                    if (unit.equals("")) {
+                        System.out.print("Enter unit (C or F): ");
+                        unit = scanner.nextLine().toUpperCase();
+                    }
 
                     // Keep asking until the user gives us a valid unit
                     boolean validUnit = false;
