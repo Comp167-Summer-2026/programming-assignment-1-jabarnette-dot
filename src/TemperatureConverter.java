@@ -80,11 +80,22 @@ public class TemperatureConverter {
                         unit = scanner.nextLine().toUpperCase();
                     }
 
-                    if (!unit.equals("C") && !unit.equals("F")) {
-
-                        System.out.println("Invalid unit. Please enter C for Celsius or F for Fahrenheit.");
-
+                    boolean validUnit = false;
+                    if (unit.equals("C") || unit.equals("F")) {
+                        validUnit = true;
                     } else {
+                        System.out.println("Invalid unit. Please enter C for Celsius or F for Fahrenheit.");
+                    }
+                    while (!validUnit) {
+                        System.out.print("Enter unit (C or F): ");
+                        unit = scanner.nextLine().toUpperCase();
+                        if (unit.equals("C") || unit.equals("F")) {
+                            validUnit = true;
+                        } else {
+                            System.out.println("Invalid unit. Please enter C for Celsius or F for Fahrenheit.");
+                        }
+                    }
+                    if (validUnit) {
 
                         double converted = convertTemperature(temperature, unit);
 
