@@ -5,17 +5,16 @@ public class TemperatureConverter {
     // This method takes a temperature and its unit, then returns the converted value
     public static double convertTemperature(double temperature, String unit) {
 
-        double result = 0;
+        // Handle lowercase and uppercase units
+        unit = unit.toUpperCase();
 
         if (unit.equals("C")) {
             // Celsius to Fahrenheit formula
-            result = (temperature * 9 / 5) + 32;
+            return (temperature * 9.0 / 5.0) + 32;
         } else {
             // Fahrenheit to Celsius formula
-            result = (temperature - 32) * 5 / 9;
+            return (temperature - 32) * 5.0 / 9.0;
         }
-
-        return result;
     }
 
     public static void main(String[] args) {
@@ -32,15 +31,15 @@ public class TemperatureConverter {
             input = scanner.nextLine();
 
             // Check if the user wants to stop
-            if (input.equals("stop")) {
+            if (input.equalsIgnoreCase("stop")) {
                 running = false;
 
             } else {
 
                 // Sometimes the input has the unit stuck on the end like "100c"
-                // If the last character is a letter, we split it off
                 String embeddedUnit = "";
                 char lastChar = input.charAt(input.length() - 1);
+
                 if (Character.isLetter(lastChar)) {
                     embeddedUnit = String.valueOf(lastChar).toUpperCase();
                     input = input.substring(0, input.length() - 1);
@@ -49,18 +48,21 @@ public class TemperatureConverter {
                 // Check if the input is actually a number
                 boolean isNumber = true;
 
-                // We allow a leading minus sign for negative numbers
                 String checkInput = input;
+
+                // Allow negative numbers
                 if (checkInput.startsWith("-") && checkInput.length() > 1) {
                     checkInput = checkInput.substring(1);
                 }
 
-                // Check each character to make sure it's a digit or a decimal point
                 int dotCount = 0;
+
                 for (int i = 0; i < checkInput.length(); i++) {
                     char c = checkInput.charAt(i);
+
                     if (c == '.') {
                         dotCount++;
+
                         if (dotCount > 1) {
                             isNumber = false;
                         }
@@ -74,16 +76,13 @@ public class TemperatureConverter {
                 }
 
                 if (!isNumber) {
-                    // Tell the user their input wasn't a valid number
+
                     System.out.println("Invalid input. Please enter a numeric temperature value.");
 
                 } else {
 
-                    // Convert the string to an actual number
                     double temperature = Double.parseDouble(input);
 
-                    // If the unit was already attached to the number, use it
-                    // Otherwise ask the user for it
                     String unit = embeddedUnit;
 
                     if (unit.equals("")) {
@@ -91,7 +90,6 @@ public class TemperatureConverter {
                         unit = scanner.nextLine().toUpperCase();
                     }
 
-                    // Keep asking until the user gives us a valid unit
                     boolean validUnit = false;
 
                     if (unit.equals("C") || unit.equals("F")) {
@@ -101,6 +99,7 @@ public class TemperatureConverter {
                     }
 
                     while (!validUnit) {
+
                         System.out.print("Enter unit (C or F): ");
                         unit = scanner.nextLine().toUpperCase();
 
@@ -114,16 +113,16 @@ public class TemperatureConverter {
                     // Do the conversion
                     double converted = convertTemperature(temperature, unit);
 
-                    // Figure out what unit to show in the output
-                    String toUnit = "";
+                    // Figure out output unit
+                    String toUnit;
+
                     if (unit.equals("C")) {
                         toUnit = "F";
                     } else {
                         toUnit = "C";
                     }
 
-                    // Print the result formatted to 2 decimal places
-                    System.out.printf("%.2f\u00b0%s is equal to %.2f\u00b0%s%n",
+                    System.out.printf("%.2f°%s is equal to %.2f°%s%n",
                             temperature, unit, converted, toUnit);
                 }
             }
